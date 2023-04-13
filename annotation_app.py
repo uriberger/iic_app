@@ -14,11 +14,13 @@ st.image('COCO_train2014_000000000025.jpg', width=350)
 st.markdown('**Model generated caption:** An elephant eating from a tree top')
 st.markdown('**Reformulation:** A giraffe eating from a tree top')
 st.markdown('------------------')
-st.image('http://images.cocodataset.org/train2017/000000010948.jpg', width=350)
+# st.image('http://images.cocodataset.org/train2017/000000010948.jpg', width=350)
+st.image('COCO_train2014_000000010948.jpg', width=350)
 st.markdown('**Model generated caption:** A boy playing a card game')
 st.markdown('**Reformulation:** A man and a woman playing a video game')
 st.markdown('------------------')
-st.image('http://images.cocodataset.org/train2017/000000010728.jpg', width=350)
+# st.image('http://images.cocodataset.org/train2017/000000010728.jpg', width=350)
+st.image('COCO_train2014_000000010728.jpg', width=350)
 st.markdown('**Model generated caption:** A tennis player hitting the ball with a racket **[Caption too bad to fix]**')
 st.markdown('**Reformulation:** A pizza sitting on a plate on a wooden table')
 
@@ -94,10 +96,12 @@ def annotate():
 if len(state.samples) > 0:
     sample = state.current_sample
 
-    url_prefix = 'http://images.cocodataset.org/'
-    url_prefix += sample['split'] + '2017/'
-    image_url = url_prefix + str(sample['image_id']).zfill(12) + '.jpg'
-    st.image(image_url, width=350)
+    # url_prefix = 'http://images.cocodataset.org/'
+    # url_prefix += sample['split'] + '2017/'
+    # image_url = url_prefix + str(sample['image_id']).zfill(12) + '.jpg'
+    # st.image(image_url, width=350)
+    image_name = 'COCO_train2014_' + str(sample['image_id']).zfill(12) + '.jpg'
+    st.image(image_name, width=350)
     st.markdown('**Model generated caption:** ' + sample['caption'])
     st.text_input(label='**Reformulation:**', on_change=annotate, key='ref_text_box')
 
