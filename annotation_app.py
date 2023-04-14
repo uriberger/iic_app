@@ -3,6 +3,7 @@ import random
 import json
 import pandas as pd
 from collections import defaultdict
+import gspread
 
 st.header('My Interactive image captioning annotation')
 st.subheader('Instructions')
@@ -54,52 +55,46 @@ st.subheader('Annotation')
 #             fp.write(json_obj)
 
 # Option 2: with google sheets
-# def load_data(sheets_url):
-#     csv_url = sheets_url.replace("edit?usp=sharing", "gviz/tq?tqx=out:csv&sheet=Sheet1")
-#     return pd.read_csv(csv_url)
+def create_image_to_count():
+    image_id_list = state.ws.col_values(2)[1:]
+    res = defaultdict(int)
+    for image_id in image_id_list:
+        res[int(image_id)] += 1
+    return res
 
-# def create_image_to_count():
-#     df = load_data(st.secrets["public_gsheets_url"])
-#     image_id_list = df['image_id'].tolist()
-#     res = defaultdict(int)
-#     for image_id in image_id_list:
-#         res[image_id] += 1
-#     return res
-
-# st.markdown('DEBUG ' + str(create_image_to_count()))
-
-# df = pd.concat((df, pd.DataFrame({'split': ['train'], 'image_id': ['6666'], 'reformulation': ['A dog']})))
-
-# Option 3: with streamlit state
 state = st.session_state
 
-if "annotations" not in state:
+if 'ws' not in state:
+    credentials = {'type': 'service_account', 'project_id': 'interactive-image-captioning', 'private_key_id': '12035110982ce28b4c91e02e3c314fb7ba7009af', 'private_key': '-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC9uve5nFEq/ATM\nBIWH8ds1h/xNFC4eqcWYWkFgKr8Nb/BYJOnB4EAwxDe0QCJNGrEEouHNHJWG7W/2\n4OYjtCUdI0d9qxZx9hpIggA5O+aiBHf1iHZTVQlhZic3U/Dut92ryAauovQtbk43\nW7dTo/LhDeWjpsvwSnqBVzZ1tGLxLhVt/4mRECO0/auxYyv+Dq+caZa5IzQ5b4uz\nlKwp1cwrNeOHVPbuZ5DWhadyI/KDplenKXs1+fr91/ZIQEkWaxjcV8Zl6qDFTuQq\nhSVqS53X8hjUcrzRxqjrYEdNk/bGcT0naLLV0HSWoNXnDyw984IU86Nw4zag0nXT\ni34YXjPXAgMBAAECggEAA6imAyWMJjjSTL4SwZ1gj3a2hKxbt4/HZLX6RkyK2Vp8\n+SnxTfSW1XvMngZc8gjDNQZUCMM10oGGQ/y0D6/ZIBTmJOucAFDW8MxPlHCe3iWR\n6fCHzq3SuBMfHl0GVQ938eEbb2ku03OTSFQCwEYbZ3h4QQoTDRW/xydXOPzN1y8F\ngkTccQGGty2OZ8fSUKTZZbMYRYVrQulhJr/DZZtudhstZMLoT97NokX0DJ6PL/dT\n+Pn+cnkK1ri+fo2CIY38Rf7UXfDsURlzGJVmbIqTQJT97ekelW4r37NJ4kqypzvj\nFiZPIqUskx/ILTp2ZhWg+5P2wtAKvyFQD8L4mW5mMQKBgQDr8UOh7+HSo0irLBCF\nrF4dxZybpEO+P/t/grJbt7GfHmReuzVQtScYOliI/1YuImJJNO1bAcZCkKkYST0e\nTmGZnzbcooojLcnY1rbQ8zoKE7JRvPcFnacmuPDevkYGEzsGMjR56BPbi5FkxIB+\n3Ezuckl+VlKh4B4DQbut4FptiQKBgQDN3AFVkzkGfeDpLpfYo25cKCFPppByapEA\nPNo0w1rdfXGF9CI+cFYyo9BslIUZYmmdKltRTr7W/UaYLAcdlBMitWFxxmd69Dtz\nmm9Eqlce8/fTLoFxLF5AoRt0QBGvD4Ru55N/tviPBYfndrFa1Cm29UWwoSDYaJ1y\nrHWsLU2eXwKBgQDS5IUycutjzqV+stVV1lsNu3ufNvWCUUhokhcAmjH+6ziF4Eno\niPOX2VcXpTuP4xX9H3zlMrHW/9zVI2mo9CCTItfz4Kkehqf71Pf1zuJa7X4fR4t5\nDpDAsOBECMkoVvoUML3tFT7ip17fNjEws5NkMu10Ko6TuHK7MH8kDPxnGQKBgD0N\nzAOCV35aZRMjc3uX9Qo2CLMj1mFow7qLUbgmXFOmeb3dyy4ziQ0Z0p3xaow9yM8J\nGe5CaY0/rulA3ZdjLE2198GTs2se9mbx3aBC2PXgK5chithy7T1Dyu2udtAxzPhL\njE5riMp6PHVkmXMzy29szQ92qlQkqtWw2nGHOicHAoGBAMNPgiAhkfdMoidINmHZ\n4R3IqNVmMWCVhZj/wyy+eHAL1Oj0ZjLMTIKJHiHHxV3D0/irVOKZOMY2bJvk7QgA\nlLPR6hQZHAaMSc17AhpG8/qEp6gSRJKHGfXvJgPgtpn2Hl0c+BhLndWfAHFpJjOt\nKBjtLr/KH18j3C9ZexhuSxMC\n-----END PRIVATE KEY-----\n', 'client_email': 'interactive-image-captioning@interactive-image-captioning.iam.gserviceaccount.com', 'client_id': '116699025089117232662', 'auth_uri': 'https://accounts.google.com/o/oauth2/auth', 'token_uri': 'https://oauth2.googleapis.com/token', 'auth_provider_x509_cert_url': 'https://www.googleapis.com/oauth2/v1/certs', 'client_x509_cert_url': 'https://www.googleapis.com/robot/v1/metadata/x509/interactive-image-captioning%40interactive-image-captioning.iam.gserviceaccount.com'}
+    gc = gspread.service_account_from_dict(credentials)
+    sh = gc.open("annotation_pilot")
+    state.ws = sh.worksheet('Sheet1')
+
     data_file_name = 'data_example.json'
     with open(data_file_name, 'r') as fp:
-        data = json.load(fp)
+        state.data = json.load(fp)
 
-    state.annotations = {}
-    state.samples = data
-    state.current_sample = state.samples[0]
+    image_to_count = create_image_to_count()
+    state.unvisited_samples = [x for x in state.data if image_to_count[x['image_id']] == 0]
+    if len(state.unvisited_samples) > 0:
+        state.current_sample = random.choice(state.unvisited_samples)
 
 def annotate():
     reformulation = state.ref_text_box
-    st.markdown('DEBUG in annotate with ' + reformulation)
     image_id = state.current_sample['image_id']
-    if image_id not in state.annotations:
-        state.annotations[image_id] = []
-    state.annotations[image_id].append(reformulation)
-    state.samples.remove(state.current_sample)
-    if len(state.samples) > 0:
-        state.current_sample = state.samples[0]
+    next_row_ind = len(state.ws.col_values(1)) + 1
+    state.ws.update('A' + str(next_row_ind), 'train')
+    state.ws.update('B' + str(next_row_ind), str(image_id))
+    state.ws.update('C' + str(next_row_ind), state.current_sample['caption'])
+    state.ws.update('D' + str(next_row_ind), reformulation)
+    image_to_count = create_image_to_count()
+    state.unvisited_samples = [x for x in state.data if image_to_count[x['image_id']] == 0]
+    if len(state.unvisited_samples) > 0:
+        state.current_sample = random.choice(state.unvisited_samples)
 
-if len(state.samples) > 0:
+if len(state.unvisited_samples) > 0:
     sample = state.current_sample
 
-    # url_prefix = 'http://images.cocodataset.org/'
-    # url_prefix += sample['split'] + '2017/'
-    # image_url = url_prefix + str(sample['image_id']).zfill(12) + '.jpg'
-    # st.image(image_url, width=350)
     image_name = 'COCO_train2014_' + str(sample['image_id']).zfill(12) + '.jpg'
     st.image(image_name, width=350)
     st.markdown('**Model generated caption:** ' + sample['caption'])
@@ -108,10 +103,48 @@ if len(state.samples) > 0:
 else:
     st.info("Everything annotated.")
 
-st.info(f"Annotated: {len(state.annotations)}, Remaining: {len(state.samples)}")
+# Option 3: with streamlit state
+# state = st.session_state
 
-st.download_button(
-    "Download annotations as CSV",
-    "\n".join([f"{k}\t{v}" for k, v in state.annotations.items()]),
-    file_name="export.csv",
-)
+# if "annotations" not in state:
+#     data_file_name = 'data_example.json'
+#     with open(data_file_name, 'r') as fp:
+#         data = json.load(fp)
+
+#     state.annotations = {}
+#     state.samples = data
+#     state.current_sample = random.choice(state.samples)
+
+# def annotate():
+#     reformulation = state.ref_text_box
+#     st.markdown('DEBUG in annotate with ' + reformulation)
+#     image_id = state.current_sample['image_id']
+#     if image_id not in state.annotations:
+#         state.annotations[image_id] = []
+#     state.annotations[image_id].append(reformulation)
+#     state.samples.remove(state.current_sample)
+#     if len(state.samples) > 0:
+#         state.current_sample = random.choice(state.samples)
+
+# if len(state.samples) > 0:
+#     sample = state.current_sample
+
+#     # url_prefix = 'http://images.cocodataset.org/'
+#     # url_prefix += sample['split'] + '2017/'
+#     # image_url = url_prefix + str(sample['image_id']).zfill(12) + '.jpg'
+#     # st.image(image_url, width=350)
+#     image_name = 'COCO_train2014_' + str(sample['image_id']).zfill(12) + '.jpg'
+#     st.image(image_name, width=350)
+#     st.markdown('**Model generated caption:** ' + sample['caption'])
+#     st.text_input(label='**Reformulation:**', on_change=annotate, key='ref_text_box')
+
+# else:
+#     st.info("Everything annotated.")
+
+# st.info(f"Annotated: {len(state.annotations)}, Remaining: {len(state.samples)}")
+
+# st.download_button(
+#     "Download annotations as CSV",
+#     "\n".join([f"{k}\t{v}" for k, v in state.annotations.items()]),
+#     file_name="export.csv",
+# )
