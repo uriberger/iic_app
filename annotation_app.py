@@ -65,6 +65,7 @@ if 'ws' not in state:
 # in the annotation text box
 def annotate():
     reformulation = state.ref_text_box
+    state.ref_text_box = ''
     image_id = state.current_sample['image_id']
 
     # Update the google sheet
