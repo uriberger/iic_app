@@ -10,6 +10,11 @@ name_to_example_range_and_pattern = {
     'Gili': (range(21), 0),
     'Natali': (range(21), 1),
     'Uri': (range(21), 2),
+    'Avinadav': (range(21, 42), 0),
+    'Tal': (range(21, 42), 1),
+    'Alex': (range(21, 42), 2),
+    'Judy': (range(42, 63), 0),
+    'Lior': (range(42, 63), 1),
 }
 
 patterns = [
@@ -233,7 +238,10 @@ def run_with_name():
             state.res[8]=state.question_9_text_input
 
         st.markdown('9. How many objects are mentioned in the description? If the description uses numeral expressions, consider it as a mention of the numeral value of the expression (e.g., “five dogs and two cats” should be considered as 7 objects mentioned, not 2), and include cases where the description mistakenly mentions objects not in the image (if the description mentions 3 dogs but there are only 2 in the image, count it as 3).')
-        st.text_input(label='', on_change=record_question_9, key='question_9_text_input')
+        value = ''
+        if 8 in state.res:
+            value = state.res[8]
+        st.text_input(label='', on_change=record_question_9, key='question_9_text_input', value=value)
 
         def record_question_10():
             state.res[9]=state.question_10_slider
