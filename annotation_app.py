@@ -21,7 +21,7 @@ name_to_example_range_and_pattern = {
     'Hila': (range(63, 84), 2),
     'Shai': (range(84, 105), 0),
     'Yonatan': (range(84, 105), 1),
-    'Noa': (range(84, 105), 0)
+    'Assaf': (range(84, 105), 0)
 }
 
 patterns = [
