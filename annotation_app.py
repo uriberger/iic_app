@@ -15,6 +15,13 @@ name_to_example_range_and_pattern = {
     'Alex': (range(21, 42), 2),
     'Judy': (range(42, 63), 0),
     'Lior': (range(42, 63), 1),
+    'Hila O': (range(42, 63), 2),
+    'Andrei': (range(63, 84), 0),
+    'Netali': (range(63, 84), 1),
+    'Hila': (range(63, 84), 2),
+    'Shai': (range(84, 105), 0),
+    'Yonatan': (range(84, 105), 1),
+    'Noa': (range(84, 105), 0)
 }
 
 patterns = [
