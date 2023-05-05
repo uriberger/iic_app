@@ -201,38 +201,56 @@ def run_with_name():
         def record_question_3():
             state.res[2]=state.question_3_slider
 
+        value = 3
+        if 2 in state.res:
+            value = state.res[2]
         st.markdown('3. On a scale of 1 to 5, how creative is the description, 1 being not creative and highly expected and 5 being highly creative.')
-        st.slider(label='', min_value=1, max_value=5, value=3, on_change=record_question_3, key='question_3_slider')
+        st.slider(label='', min_value=1, max_value=5, value=value, on_change=record_question_3, key='question_3_slider')
 
         def record_question_4():
             state.res[3]=state.question_4_slider
 
+        value = 3
+        if 3 in state.res:
+            value = state.res[3]
         st.markdown('4. On a scale of 1 to 5, how simple is the language of the description, 1 being very simple and understandable for non-experts and 5 being highly complex with expertise in English needed to understand the description.')
-        st.slider(label='', min_value=1, max_value=5, value=3, on_change=record_question_4, key='question_4_slider')
+        st.slider(label='', min_value=1, max_value=5, value=value, on_change=record_question_4, key='question_4_slider')
 
         def record_question_5():
             state.res[4]=state.question_5_slider
 
+        value = 3
+        if 4 in state.res:
+            value = state.res[4]
         st.markdown('5. On a scale of 1 to 5, how complete is the description in describing the image, 1 being very incomplete with many components of the image missing in the description and 5 being complete with each detail of the image being described.')
-        st.slider(label='', min_value=1, max_value=5, value=3, on_change=record_question_5, key='question_5_slider')
+        st.slider(label='', min_value=1, max_value=5, value=value, on_change=record_question_5, key='question_5_slider')
 
         def record_question_6():
             state.res[5]=state.question_6_slider
 
+        value = 3
+        if 5 in state.res:
+            value = state.res[5]
         st.markdown('6. On a scale of 1 to 5, how detailed is the description in describing the properties (such as color, model, shape etc.) of the main objects in the image, 1 being not detailed at all (just naming the objects) and 5 being highly detailed (mentioning many properties).')
-        st.slider(label='', min_value=1, max_value=5, value=3, on_change=record_question_6, key='question_6_slider')
+        st.slider(label='', min_value=1, max_value=5, value=value, on_change=record_question_6, key='question_6_slider')
 
         def record_question_7():
             state.res[6]=state.question_7_slider
 
+        value = 3
+        if 6 in state.res:
+            value = state.res[6]
         st.markdown('7. On a scale of 1 to 5, how much does the description describe things that are not explicitly in the image but might be reasonably inferred from the image (such as relation between people in the image, activities that are commonly performed before/after what is in the image etc.), 1 being not at all (the description describes only what is explicit in the image) and 5 being highly descriptive of implicit information.')
-        st.slider(label='', min_value=1, max_value=5, value=3, on_change=record_question_7, key='question_7_slider')
+        st.slider(label='', min_value=1, max_value=5, value=value, on_change=record_question_7, key='question_7_slider')
 
         def record_question_8():
             state.res[7]=state.question_8_slider
 
+        value = 3
+        if 7 in state.res:
+            value = state.res[7]
         st.markdown('8. On a scale of 1 to 5, how much does the description use subjective adjectives to describe objects?')
-        st.slider(label='', min_value=1, max_value=5, value=3, on_change=record_question_8, key='question_8_slider')
+        st.slider(label='', min_value=1, max_value=5, value=value, on_change=record_question_8, key='question_8_slider')
 
         def record_question_9():
             state.res[8]=state.question_9_text_input
@@ -246,8 +264,11 @@ def run_with_name():
         def record_question_10():
             state.res[9]=state.question_10_slider
 
+        value = 3
+        if 9 in state.res:
+            value = state.res[9]
         st.markdown('10. On a scale of 1 to 5, how would you rate the overall quality of the description? I.e., is it a good description of the image?.')
-        st.slider(label='', min_value=1, max_value=5, value=3, on_change=record_question_10, key='question_10_slider')
+        st.slider(label='', min_value=1, max_value=5, value=value, on_change=record_question_10, key='question_10_slider')
 
         st.button(label='Submit and go to next image', on_click=annotate)
         st.markdown('[Back to Top](#annotation)')
