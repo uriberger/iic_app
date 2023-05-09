@@ -18,10 +18,10 @@ name_to_example_range_and_pattern = {
     'Hila O': (range(42, 63), 2),
     'Andrei': (range(63, 84), 0),
     'Netali': (range(63, 84), 1),
-    'Hila': (range(63, 84), 2),
-    'Shai': (range(84, 105), 0),
+    'Noa': (range(63, 84), 2),
+    'Assaf': (range(84, 105), 0),
     'Yonatan': (range(84, 105), 1),
-    'Assaf': (range(84, 105), 0)
+    'Ben': (range(84, 105), 2)
 }
 
 patterns = [
@@ -63,7 +63,7 @@ def run_with_name():
     st.markdown('Description example: "A small kitten, so joyful that even a shoe is considered a toy"')
     st.markdown('Answer: 5')
 
-    st.markdown('4. On a scale of 1 to 5, how simple is the language of the description, 1 being very simple and understandable for non-experts and 5 being highly complex with expertise in English needed to understand the description.')
+    st.markdown('4. On a scale of 1 to 5, how complex is the language of the description, 1 being very simple and understandable for non-experts and 5 being highly complex with expertise in English needed to understand the description.')
     st.markdown('Description example: "Cat playing with an old shoe"')
     st.markdown('Answer: 1')
     st.markdown('Description example: "A blithe cat, toying with an antique footgear"')
@@ -220,7 +220,7 @@ def run_with_name():
         value = 3
         if 3 in state.res:
             value = state.res[3]
-        st.markdown('4. On a scale of 1 to 5, how simple is the language of the description, 1 being very simple and understandable for non-experts and 5 being highly complex with expertise in English needed to understand the description.')
+        st.markdown('4. On a scale of 1 to 5, how complex is the language of the description, 1 being very simple and understandable for non-experts and 5 being highly complex with expertise in English needed to understand the description.')
         st.slider(label='', min_value=1, max_value=5, value=value, on_change=record_question_4, key='question_4_slider')
 
         def record_question_5():
