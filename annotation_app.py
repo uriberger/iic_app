@@ -10,7 +10,7 @@ name_to_example_range_and_pattern = {
     'Gili': (range(21), 0),
     'Natali': (range(21), 1),
     'Uri': (range(21), 2),
-    'Avinadav': (range(21, 42), 0),
+    'Amir': (range(21, 42), 0),
     'Tal': (range(21, 42), 1),
     'Alex': (range(21, 42), 2),
     'Judy': (range(42, 63), 0),
@@ -19,7 +19,7 @@ name_to_example_range_and_pattern = {
     'Keren': (range(63, 84), 0),
     'Netali': (range(63, 84), 1),
     'Noa': (range(63, 84), 2),
-    'Assaf': (range(84, 105), 0),
+    'Liran': (range(84, 105), 0),
     'Yonatan': (range(84, 105), 1),
     'Ben': (range(84, 105), 2)
 }
