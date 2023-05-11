@@ -16,7 +16,7 @@ name_to_example_range_and_pattern = {
     'Judy': (range(42, 63), 0),
     'Lior': (range(42, 63), 1),
     'Hila O': (range(42, 63), 2),
-    'Andrei': (range(63, 84), 0),
+    'Keren': (range(63, 84), 0),
     'Netali': (range(63, 84), 1),
     'Noa': (range(63, 84), 2),
     'Assaf': (range(84, 105), 0),
@@ -49,7 +49,7 @@ def run_with_name():
     st.subheader('Example')
     st.image('images/example.jpg', width=350)
     
-    st.markdown('1. Does the description describe something that is not in the image? (yes/no)')
+    st.markdown('1. Does the description incorrectly describe something that is not in the image? (yes/no)')
     st.markdown('Description example: "A cat and a dog playing with a shoe"')
     st.markdown('Answer: Yes')
 
@@ -193,7 +193,7 @@ def run_with_name():
         st.image(image_name, width=350)
         st.markdown('*Description*: ' + sample[1])
 
-        st.markdown('1. Does the description describe something that is not in the image?')
+        st.markdown('1. Does the description incorrectly describe something that is not in the image?')
         if st.button(label='Yes', key='question_1_yes_button'):
             state.res[0] = 'yes'
         if st.button(label='No', key='question_1_no_button'):
