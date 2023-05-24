@@ -3,6 +3,7 @@ import random
 import json
 from collections import defaultdict
 import gspread
+import time
 
 # First, we need a utility function to count how many annotations we have for each image;
 # we'll use it later to find unannoated images
@@ -90,10 +91,11 @@ def examples_page():
 
 def instruction_page1():
     st.markdown('The image and description will be displayed on the screen, as follows: (this is just an example)')
+
     with st.expander("See example"):
         st.image('reformulation_images/COCO_train2014_000000000025.jpg', width=350)
         caption = 'An elephant eating from a tree top'
-        st.markdown('**Model generated description:** ' + 'caption')
+        st.markdown('**Model generated description:** ' + caption)
         st.markdown('**Reformulation:**')
         caption_parts = caption.split()
         length_lists = get_lengths(caption_parts)
@@ -114,6 +116,11 @@ def instruction_page1():
     st.button('Next', key='next_button2', on_click=next_page)
 
 def instruction_page2():
+    # I have no idea why, but if I move from the first page to the second with the expander
+    # open, the expander on the second page is open, and if I add the following line (which
+    # doesn't seem to be related in any way) it solves the problem
+    st.markdown('')
+
     st.markdown('Below the image and the description you can see the "Reformulation" section, where you see all the words of the description. If you click one of the words you will see all possible actions for this word. Try clicking one of the words in the following example:')
     with st.expander("See example"):
         st.image('reformulation_images/COCO_train2014_000000000025.jpg', width=350)
@@ -146,7 +153,7 @@ def instruction_page2():
     st.button('Next', key='next_button3', on_click=next_page)
 
 def instruction_page3():
-    st.markdown('If the description is too bad to fix and you want to write your own description from scratch, use the "Rewrite description" box.')
+    st.markdown('If the description is too bad to fix and you want to write your own description from scratch, use the "Rewrite description" box:')
     with st.expander("See example"):
         st.image('reformulation_images/COCO_train2014_000000000025.jpg', width=350)
         caption = 'An elephant eating from a tree top'
@@ -172,6 +179,11 @@ def instruction_page3():
     st.button('Next', key='next_button4', on_click=next_page)
 
 def instruction_page4():
+    # I have no idea why, but if I move from the third page to the fourth with the expander
+    # open, the expander on the second page is open, and if I add the following line (which
+    # doesn't seem to be related in any way) it solves the problem
+    st.markdown('')
+
     st.markdown('When you finish reformulating, click the Finished button. The next image and description will then be presented to you.')
     with st.expander("See example"):
         st.image('reformulation_images/COCO_train2014_000000000025.jpg', width=350)
