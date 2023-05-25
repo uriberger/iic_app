@@ -272,11 +272,12 @@ def annotation_page():
         length_lists = get_lengths(state.caption_parts)
         cur_start = 0
         for length_list in length_lists:
-            cols = st.columns([x for x in length_list])
-            for i in range(cur_start, cur_start + len(length_list)):
-                with cols[i - cur_start]:
-                    st.button(state.caption_parts[i], on_click=click_func, kwargs={'click_ind': i}, key='token' + str(i), use_container_width=True)
-            cur_start += len(length_list)
+            if len(length_list) > 0:
+                cols = st.columns([x for x in length_list])
+                for i in range(cur_start, cur_start + len(length_list)):
+                    with cols[i - cur_start]:
+                        st.button(state.caption_parts[i], on_click=click_func, kwargs={'click_ind': i}, key='token' + str(i), use_container_width=True)
+                cur_start += len(length_list)
 
         st.markdown('------------------')
         if state.token_selected is not None:
