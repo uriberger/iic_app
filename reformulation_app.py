@@ -232,6 +232,7 @@ def annotation_page():
         state.unvisited_samples = [x for x in state.data if image_to_count[x['image_id']] == 0]
         if len(state.unvisited_samples) > 0:
             state.current_sample = random.choice(state.unvisited_samples)
+            state.caption_parts = state.current_sample['caption'].split()
 
     # If we have un annotated samples, present to the user. Otherwise, state that everything is annotated
     if len(state.unvisited_samples) > 0:
