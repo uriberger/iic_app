@@ -93,6 +93,9 @@ def run_with_name():
     st.markdown('Description example: "A beautiful cat playing with an old looking shoe"')
     st.markdown('Answer: 5')
 
+    abcde
+    # Maybe add the question: Does the description meta-describes the image? E.g., if the image is upside-down does the description mention it?
+
     st.markdown('9. How many objects are mentioned in the description? If the description uses numeral expressions, consider it as a mention of the numeral value of the expression (e.g., “five dogs and two cats” should be considered as 7 objects mentioned, not 2), and include cases where the description mistakenly mentions objects not in the image (if the description mentions 3 dogs but there are only 2 in the image, count it as 3).')
     st.markdown('Description example: "A cat playing with a shoe"')
     st.markdown('Answer: 2')
