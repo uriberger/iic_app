@@ -8,11 +8,14 @@ import time
 # First, we need a utility function to count how many annotations we have for each image;
 # we'll use it later to find unannoated images
 # This function assumes that state.ws is the google sheet worksheet which is already initialized
-def create_image_to_count():
+def create_image_to_sources():
     image_id_list = state.ws.col_values(2)[1:]
-    res = defaultdict(int)
-    for image_id in image_id_list:
-        res[int(image_id)] += 1
+    source_list = state.ws.col_values(3)[1:]
+    res = defaultdict(list)
+    for i in range(len(image_id_list)):
+        image_id = int(image_id_list[i])
+        source = source_list[i]
+        res[image_id].append(source)
     return res
 
 # Initalize
@@ -34,12 +37,18 @@ if 'ws' not in state:
     blip_data_file_name = 'reformulation_data/blip_coco_val.json'
     with open(blip_data_file_name, 'r') as fp:
         blip_data = json.load(fp)
+        for i in range(len(blip_data)):
+            blip_data[i]['source'] = 'blip'
     mplug_data_file_name = 'reformulation_data/mplug_coco_val.json'
     with open(mplug_data_file_name, 'r') as fp:
         mplug_data = json.load(fp)
+        for i in range(len(mplug_data)):
+            mplug_data[i]['source'] = 'mplug'
     clipcap_data_file_name = 'reformulation_data/clipcap_coco_val.json'
     with open(clipcap_data_file_name, 'r') as fp:
         clipcap_data = json.load(fp)
+        for i in range(len(clipcap_data)):
+            clipcap_data[i]['source'] = 'clipcap'
     all_data = blip_data + mplug_data + clipcap_data
     with open('reformulation_data/current_image_ids.json', 'r') as fp:
         current_image_ids = json.load(fp)
@@ -47,8 +56,8 @@ if 'ws' not in state:
     state.data = [x for x in all_data if x['image_id'] in current_image_ids_dict]
 
     # Find samples which were not annotated (if such exists)
-    image_to_count = create_image_to_count()
-    state.unvisited_samples = [x for x in state.data if image_to_count[x['image_id']] == 0]
+    image_to_sources = create_image_to_sources()
+    state.unvisited_samples = [x for x in state.data if x['source'] not in image_to_sources[x['image_id']]]
     if len(state.unvisited_samples) > 0:
         state.current_sample = random.choice(state.unvisited_samples)
 
@@ -108,18 +117,18 @@ def annotation_page():
         # 2. Update the sheet
         state.ws.update('A' + str(next_row_ind), 'val')
         state.ws.update('B' + str(next_row_ind), str(image_id))
-        state.ws.update('C' + str(next_row_ind), state.current_sample['caption'])
-        state.ws.update('D' + str(next_row_ind), reformulation)
-        state.ws.update('E' + str(next_row_ind), str(annotation_time))
+        state.ws.update('C' + str(next_row_ind), str(state.current_sample['source']))
+        state.ws.update('D' + str(next_row_ind), state.current_sample['caption'])
+        state.ws.update('E' + str(next_row_ind), reformulation)
+        state.ws.update('F' + str(next_row_ind), str(annotation_time))
 
         state.action_history = []
 
         # Search for samples which were not annotated again
-        image_to_count = create_image_to_count()
-        state.unvisited_samples = [x for x in state.data if image_to_count[x['image_id']] == 0]
+        image_to_sources = create_image_to_sources()
+        state.unvisited_samples = [x for x in state.data if x['source'] not in image_to_sources[x['image_id']]]
         if len(state.unvisited_samples) > 0:
             state.current_sample = random.choice(state.unvisited_samples)
-            state.caption_parts = state.current_sample['caption'].split()
 
     # If we have un annotated samples, present to the user. Otherwise, state that everything is annotated
     if len(state.unvisited_samples) > 0:
