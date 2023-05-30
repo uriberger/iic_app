@@ -18,6 +18,13 @@ def create_image_to_sources():
         res[image_id].append(source)
     return res
 
+def create_annotator_to_count():
+    annotator_list = state.ws.col_values(7)[1:]
+    res = defaultdict(int)
+    for annotator in annotator_list:
+        res[annotator] += 1
+    return res
+
 # Initalize
 state = st.session_state
 
@@ -63,6 +70,7 @@ if 'ws' not in state:
 
     # Initalization of other state arguments
     state.cur_page = 0
+    state.annotator_to_count = create_annotator_to_count()
 
 def next_page():
     state.cur_page += 1
@@ -194,13 +202,33 @@ def annotation_page():
     else:
         st.info("Everything annotated.")
 
+def welcome_back_page():
+    st.markdown('Welcome back, ' + state.first_name + '!')
+    annotator_name = state.first_name + ' ' + state.last_name
+    annotation_count = state.annotator_to_count[annotator_name]
+    st.markdown('So far you\'ve reformulated ' + str(annotation_count) + ' image descriptions')
+    max_annotation_count = max(state.annotator_to_count.values())
+    if max_annotation_count > annotation_count:
+        st.markdown('The user with the highest number of reformulations created ' + str(max_annotation_count) + ' reformulations. Are you up to the challenge?')
+    else:
+        st.markdown('You are the user with the highest number of reformulations! Keep up the good work!')
+    st.button('Let\'s continue!', key='continue_button', on_click=next_page)
+
 if state.cur_page == 0:
     hello_page()
-elif state.cur_page == 1:
-    examples_page()
-elif state.cur_page == 2:
-    instruction_page()
-elif state.cur_page == 3:
-    notes_page()
-elif state.cur_page == 4:
-    annotation_page()
+else:
+    annotator_name = state.first_name + ' ' + state.last_name
+    if annotator_name in state.annotator_to_count:
+        if state.cur_page == 1:
+            welcome_back_page()
+        elif state.cur_page == 2:
+            annotation_page()
+    else:
+        if state.cur_page == 1:
+            examples_page()
+        elif state.cur_page == 2:
+            instruction_page()
+        elif state.cur_page == 3:
+            notes_page()
+        elif state.cur_page == 4:
+            annotation_page()
