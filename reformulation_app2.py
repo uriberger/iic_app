@@ -140,8 +140,9 @@ def instruction_page():
         caption = 'An elephant eating from a tree top'
         st.markdown('**Original description:** ' + caption)
         st.text_input('**Reformulation:**', value=caption, key='reformulation_box_demo')
+        st.button('Submit', key='submit_button_demo')
 
-    st.markdown('You are requested to edit the text in the **Reformulation** box and press enter once you finish.')
+    st.markdown('You are requested to edit the text in the **Reformulation** box and press the "Submit" button once you finish.')
 
     st.button('Next', key='next_button2', on_click=next_page)
 
@@ -187,7 +188,8 @@ def annotation_page():
         image_name = 'reformulation_images/COCO_val2014_' + str(sample['image_id']).zfill(12) + '.jpg'
         st.image(image_name, width=350)
         st.markdown('**Original description:** ' + sample['caption'])
-        st.text_input('**Reformulation:**', value=sample['caption'], key='reformulation_box', on_change=annotate)
+        st.text_input('**Reformulation:**', value=sample['caption'], key='reformulation_box')
+        st.button('Submit', key='submit_button', on_click=annotate)
         t = time.time()
     else:
         st.info("Everything annotated.")
