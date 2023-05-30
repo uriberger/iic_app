@@ -165,7 +165,7 @@ def annotation_page():
         # 1. Find in which row we need to put the new annotations
         next_row_ind = len(state.ws.col_values(1)) + 1
         # 2. Update the sheet
-        state.ws.update('A' + str(next_row_ind), 'val')
+        state.ws.update('A' + str(next_row_ind), 'test')
         state.ws.update('B' + str(next_row_ind), str(image_id))
         state.ws.update('C' + str(next_row_ind), str(state.current_sample['source']))
         state.ws.update('D' + str(next_row_ind), state.current_sample['caption'])
