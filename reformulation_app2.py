@@ -67,28 +67,70 @@ if 'ws' not in state:
 def next_page():
     state.cur_page += 1
 
-def examples_page():
+def record_name():
+    if len(state.first_name_box) == 0:
+        st.markdown('**First name empty**')
+    elif len(state.last_name_box) == 0:
+        st.markdown('**Last name empty**')
+    else:
+        state.first_name = state.first_name_box
+        state.last_name = state.last_name_box
+        next_page()
+
+def hello_page():
     st.header('Interactive image captioning annotation')
+    st.markdown('Hello! Please enter your name')
+    st.text_input('First name', key='first_name_box')
+    st.text_input('Last name', key='last_name_box')
+
+    st.button('Next', key='next_button0', on_click=record_name)
+
+def examples_page():
     st.subheader('Instructions')
     st.markdown('In this task, you will be presented with images together with a textual image description. Your task is to reformulate the description so that (a) it is as similar as possible to the original and (b) all errors from the original descriptions are fixed (if any errors exist). If the original descriptions is too bad to fix, please write a completely new description.')
+    st.markdown('Please press the buttons below and watch the examples before you start.')
 
     st.subheader('Examples')
-    #st.image('http://images.cocodataset.org/train2017/000000000025.jpg', width=350)
-    st.image('reformulation_images/examples/COCO_train2014_000000000025.jpg', width=350)
-    st.markdown('**Original description:** An elephant eating from a tree top')
-    st.markdown('**Reformulation:** A giraffe eating from a tree top')
-    st.markdown('------------------')
-    # st.image('http://images.cocodataset.org/train2017/000000010948.jpg', width=350)
-    st.image('reformulation_images/examples/COCO_train2014_000000010948.jpg', width=350)
-    st.markdown('**Original description:** A boy playing a card game')
-    st.markdown('**Reformulation:** A man and a woman playing a video game')
-    st.markdown('------------------')
-    # st.image('http://images.cocodataset.org/train2017/000000010728.jpg', width=350)
-    st.image('reformulation_images/examples/COCO_train2014_000000010728.jpg', width=350)
-    st.markdown('**Original description:** A tennis player hitting the ball with a racket **[Description too bad to fix]**')
-    st.markdown('**Reformulation:** A pizza sitting on a plate on a wooden table')
+    if 'buttons_pressed' not in state:
+        state.buttons_pressed = []
+        for _ in range(5):
+            state.buttons_pressed.append(False)
+    if st.button('See example 1: original description using an incorrect word', key='example_button1'):
+        st.image('reformulation_images/examples/COCO_train2014_000000000025.jpg', width=350)
+        st.markdown('**Original description:** An elephant eating from a tree top')
+        st.markdown('**Reformulation:** A giraffe eating from a tree top')
+        st.markdown('------------------')
+        state.buttons_pressed[0] = True
+    if st.button("See example 2: original description missing information", key='example_button2'):
+        st.image('reformulation_images/examples/COCO_train2014_000000010948.jpg', width=350)
+        st.markdown('**Original description:** A man and a woman')
+        st.markdown('**Reformulation:** A man and a woman playing a video game')
+        st.markdown('------------------')
+        state.buttons_pressed[1] = True
+    if st.button("See example 3: original description hallucinating", key='example_button3'):
+        st.image('reformulation_images/examples/COCO_train2014_000000348204.jpg', width=350)
+        st.markdown('**Original description:** Two sheep and a cow standing on a dirt road')
+        st.markdown('**Reformulation:** Two sheep standing on a dirt road')
+        st.markdown('------------------')
+        state.buttons_pressed[2] = True
+    if st.button("See example 4: original description is not fluent", key='example_button4'):
+        st.image('reformulation_images/examples/COCO_train2014_000000528275.jpg', width=350)
+        st.markdown('**Original description:** Several horses is grazing in the meadow')
+        st.markdown('**Reformulation:** Several horses are grazing in the meadow')
+        st.markdown('------------------')
+        state.buttons_pressed[3] = True
+    if st.button("See example 5: original description is too bad to fix", key='example_button5'):
+        st.image('reformulation_images/examples/COCO_train2014_000000010728.jpg', width=350)
+        st.markdown('**Original description:** A tennis player hitting the ball with a racket')
+        st.markdown('**Reformulation:** A pizza sitting on a plate on a wooden table')
+        state.buttons_pressed[4] = True
 
-    st.button('Next', key='next_button1', on_click=next_page)
+    all_true = True
+    for pressed in state.buttons_pressed:
+        if not pressed:
+            all_true = False
+    if all_true:
+        st.button('Next page', key='next_button1', on_click=next_page)
 
 def instruction_page():
     st.markdown('The image and description will be displayed on the screen, as follows: (this is just an example)')
@@ -100,6 +142,13 @@ def instruction_page():
         st.text_input('**Reformulation:**', value=caption, key='reformulation_box_demo')
 
     st.markdown('You are requested to edit the text in the **Reformulation** box and press enter once you finish.')
+
+    st.button('Next', key='next_button2', on_click=next_page)
+
+def notes_page():
+    st.markdown('Some important notes:')
+    st.markdown('1. The examples we showed you are not the only cases where the description needs to be reformulated. You might want to reformulate other cases as well, and the descision is yours to make.')
+    st.markdown('2. If you finished or taking a break, please don\'t leave the application open; close it, and when you want to continue simply log in again.')
 
     st.button('Let\'s start!', key='start_button', on_click=next_page)
 
@@ -121,6 +170,7 @@ def annotation_page():
         state.ws.update('D' + str(next_row_ind), state.current_sample['caption'])
         state.ws.update('E' + str(next_row_ind), reformulation)
         state.ws.update('F' + str(next_row_ind), str(annotation_time))
+        state.ws.update('G' + str(next_row_ind), state.first_name + ' ' + state.last_name)
 
         state.action_history = []
 
@@ -143,8 +193,12 @@ def annotation_page():
         st.info("Everything annotated.")
 
 if state.cur_page == 0:
-    examples_page()
+    hello_page()
 elif state.cur_page == 1:
-    instruction_page()
+    examples_page()
 elif state.cur_page == 2:
+    instruction_page()
+elif state.cur_page == 3:
+    notes_page()
+elif state.cur_page == 4:
     annotation_page()
