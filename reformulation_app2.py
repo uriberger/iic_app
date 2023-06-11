@@ -71,6 +71,7 @@ if 'ws' not in state:
     # Initalization of other state arguments
     state.cur_page = 0
     state.annotator_to_count = create_annotator_to_count()
+    state.t = None
 
 def next_page():
     state.cur_page += 1
@@ -165,7 +166,8 @@ def annotation_page():
     # Next, this is the function that will be called whenever a user finish an annotation, that is, presses enter
     # in the annotation text box
     def annotate():
-        annotation_time = time.time() - t
+        annotation_time = time.time() - state.t
+        state.t = None
         reformulation = state.reformulation_box
         image_id = state.current_sample['image_id']
 
@@ -198,7 +200,8 @@ def annotation_page():
         st.markdown('**Original description:** ' + sample['caption'])
         st.text_input('**Reformulation:**', value=sample['caption'], key='reformulation_box')
         st.button('Submit', key='submit_button', on_click=annotate)
-        t = time.time()
+        if state.t is None:
+            state.t = time.time()
     else:
         st.info("Everything annotated.")
 
